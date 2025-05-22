@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace CodeTech_Task_1.Models
 {
@@ -11,9 +12,14 @@ namespace CodeTech_Task_1.Models
         public decimal Price { get; set; }
 
         public int CategoryId { get; set; }
+        [ValidateNever]
         public Category Category { get; set; }
 
+        [ValidateNever]
         public ICollection<Order> Orders { get; set; }
+
+
+        [ValidateNever]
         public ICollection<Cart> Carts { get; set; }
     }
 

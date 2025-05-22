@@ -34,9 +34,10 @@ namespace CodeTech_Task_1
             app.UseSession();
 
             app.MapStaticAssets();
+            app.UseStaticFiles();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Home}/{action=LoginPage}/{id?}")
                 .WithStaticAssets();
 
             app.Run();

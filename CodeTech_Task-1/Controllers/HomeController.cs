@@ -62,7 +62,7 @@ namespace CodeTech_Task_1.Controllers
                     //Login is Successfull
                     HttpContext.Session.SetInt32("Cust_Id", customer.CustomerId);
                     HttpContext.Session.SetString("Cust_Name", customer.Name);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("UserHomePage","User");
                 }
                 else
                 {
@@ -129,6 +129,13 @@ namespace CodeTech_Task_1.Controllers
                 }
             }
             return View(model);
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("Cust_Name");
+            HttpContext.Session.Remove("Cust_Id");
+            return RedirectToAction("LoginPage","Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
