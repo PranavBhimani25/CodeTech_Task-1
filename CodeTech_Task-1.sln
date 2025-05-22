@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeTech_Task-1", "CodeTech_Task-1\CodeTech_Task-1.csproj", "{45AD52F8-D5A0-4FE6-957D-7A0A97383C8E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45AD52F8-D5A0-4FE6-957D-7A0A97383C8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45AD52F8-D5A0-4FE6-957D-7A0A97383C8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45AD52F8-D5A0-4FE6-957D-7A0A97383C8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45AD52F8-D5A0-4FE6-957D-7A0A97383C8E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29FF1A3D-8F21-4890-9A71-2A2E69CDE2ED}
+	EndGlobalSection
+EndGlobal
