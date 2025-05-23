@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CodeTech_Task_1.Models
 {
@@ -11,9 +12,11 @@ namespace CodeTech_Task_1.Models
         public string Description { get; set; }
         public decimal Price { get; set; }
 
-        public int CategoryId { get; set; }
-        [ValidateNever]
-        public Category Category { get; set; }
+        public int Stock { get; set; }
+
+        public string ImageUrl { get; set; }
+
+
 
         [ValidateNever]
         public ICollection<Order> Orders { get; set; }
@@ -21,6 +24,7 @@ namespace CodeTech_Task_1.Models
 
         [ValidateNever]
         public ICollection<Cart> Carts { get; set; }
+
     }
 
 

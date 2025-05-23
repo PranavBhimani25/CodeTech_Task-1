@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace CodeTech_Task_1.Models
 {
@@ -19,12 +20,12 @@ namespace CodeTech_Task_1.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [StringLength(100,MinimumLength =6)]
+        [StringLength(100, MinimumLength = 6)]
         public string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password",ErrorMessage ="Password do not match")]
+        [Compare("Password", ErrorMessage = "Password do not match")]
         [ValidateNever]
         public string ConfirmPassword { get; set; }
 
@@ -37,6 +38,6 @@ namespace CodeTech_Task_1.Models
         [ValidateNever]
         public ICollection<Cart> Carts { get; set; }
     }
-
-
 }
+
+

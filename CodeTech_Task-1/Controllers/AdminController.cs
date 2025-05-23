@@ -34,31 +34,100 @@ namespace CodeTech_Task_1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct(Product product)
+        public async Task<IActionResult> AddProduct(Product product, IFormFile ImageFile)
         {
-            if (ModelState.IsValid)
+            if (ImageFile != null && ImageFile.Length > 0)
             {
-                _context.Products.Add(product);
-                await _context.SaveChangesAsync();
-                return Json(new { success = true });
-            }
-            else
-            {
-                foreach (var state in ModelState)
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images");
+                Directory.CreateDirectory(uploadsFolder); // just in case
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    var key = state.Key;
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"Validation Error in '{key}' : '{error.ErrorMessage}'");
-                    }
+                    await ImageFile.CopyToAsync(stream);
                 }
+
+                product.ImageUrl = "/Images/" + fileName;
             }
-            return PartialView("_AddProductModal", product); // Return modal with validation
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            ViewBag.ViewModel = "New Product is Added !";
+            return Json(new { success = true });
         }
 
         public IActionResult Semo()
         {
             return View();
         }
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null) return NotFound();
+            return View(product); // This returns the edit view with product model
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProduct(Product product, IFormFile ImageFile)
+        {
+            var existing = await _context.Products.FindAsync(product.ProductId);
+            if (existing == null) return NotFound();
+
+            existing.Name = product.Name;
+            existing.Price = product.Price;
+            existing.Description = product.Description;
+            existing.Stock = product.Stock;
+
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Images");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(stream);
+                }
+
+                existing.ImageUrl = "/Images/" + fileName;
+            }
+
+            await _context.SaveChangesAsync();
+            ViewBag.ViewModel = "Product is Updated !";
+            return RedirectToAction("Product","Admin");
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null) return NotFound();
+            return View(product); // This returns the edit view with product model
+        }
+
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null) return NotFound();
+
+            // delete the image file in Wwwroot image folder
+            if (!string.IsNullOrEmpty(product.ImageUrl))
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", product.ImageUrl.TrimStart('/'));
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
+            ViewBag.ViewModel = "Product is Deleted !";
+            return RedirectToAction("Product","Admin");
+        }
+
     }
 }
