@@ -62,6 +62,7 @@ namespace CodeTech_Task_1.Controllers
         {
             return View();
         }
+
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -129,5 +130,45 @@ namespace CodeTech_Task_1.Controllers
             return RedirectToAction("Product","Admin");
         }
 
+        public IActionResult Custmber()
+        {
+            var customberlist = _context.Customers.ToList();
+            return View(customberlist);
+        }
+
+        public async Task<IActionResult> EditCust(int id)
+        {
+            var Customer = await _context.Customers.FindAsync(id);
+            if (Customer == null) return NotFound();
+            return View(Customer); 
+        }
+
+        public async Task<IActionResult> EditCustmber(Customer customer)
+        {
+            var existing = await _context.Customers.FindAsync(customer.CustomerId);
+            if (existing == null) return NotFound();
+
+            existing.Name = customer.Name;
+            existing.Email = customer.Email;
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Custmber","Admin");
+        }
+
+        public async Task<IActionResult> DeleteCust(int id)
+        {
+            var Customer = await _context.Customers.FindAsync(id);
+            if (Customer == null) return NotFound();
+            return View(Customer);
+        }
+
+        public async Task<IActionResult> DeleteCustmber(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+            if (customer == null) return NotFound();
+
+            _context.Customers.Remove(customer);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Custmber", "Admin");
+        }
     }
 }
