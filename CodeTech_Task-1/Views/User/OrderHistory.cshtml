@@ -20,6 +20,12 @@ else
                 <strong>Order ID:</strong> @order.Id |
                 <strong>Date:</strong> @order.OrderDate.ToLocalTime().ToString("g") |
                 <strong>Status:</strong> <span class="text-danger">@order.Status </span>
+                <div class="text-end float-end">
+                    @if (order.Status == OrderStatus.Pending)
+                    {
+                        <a asp-controller="User" asp-action="Pay" asp-route-orderId="@order.Id" class="btn btn-primary btn-sm">Pay Now</a>
+                    }
+                </div>
             </div>
             <div class="card-body">
                 <table class="table table-bordered">
@@ -29,6 +35,7 @@ else
                             <th>Price</th>
                             <th>Qty</th>
                             <th>Total</th>
+                            @* <th>Panding Payment</th> *@
                         </tr>
                     </thead>
                     <tbody>
@@ -39,6 +46,8 @@ else
                                 <td>@item.UnitPrice.ToString("C")</td>
                                 <td>@item.Quantity</td>
                                 <td>@(item.UnitPrice * item.Quantity)</td>
+                                
+
                             </tr>
                         }
                     </tbody>

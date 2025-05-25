@@ -57,7 +57,7 @@ namespace CodeTech_Task_1.Controllers
 
         // Add to cart
         [HttpPost]
-        public async Task<IActionResult> AddToCart(int id)
+        public IActionResult AddToCart(int id)
         {
             //await Task.Delay(4000);
             var product = _context.Products.Find(id);
@@ -182,7 +182,7 @@ namespace CodeTech_Task_1.Controllers
             return RedirectToAction("OrderSuccess");
         }
 
-        public async Task<IActionResult> OrderSuccess()
+        public IActionResult OrderSuccess()
         {
             
             return View();
@@ -190,6 +190,11 @@ namespace CodeTech_Task_1.Controllers
 
         public IActionResult OrderHistory()
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var userId = HttpContext.Session.GetInt32("Cust_Id");
 
             var customer = _context.Customers.FirstOrDefault(c => c.CustomerId == userId);
@@ -208,5 +213,53 @@ namespace CodeTech_Task_1.Controllers
             return View(orders);
         }
 
+        // GET: /Order/Pay/{orderId}
+        public IActionResult Pay(int orderId)
+        {
+            var userId = HttpContext.Session.GetInt32("Cust_Id");
+            var customer = _context.Customers.FirstOrDefault(c => c.CustomerId == userId);
+            if (customer == null) return Unauthorized();
+
+            var order = _context.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefault(o => o.Id == orderId && o.CustomerId == customer.CustomerId);
+            if (order == null) return NotFound();
+
+            var payment = new Payment
+            {
+                OrderId = order.Id,
+                Amount = order.TotalAmount
+            };
+
+            ViewBag.Order = order;
+            return View(payment);
+        }
+
+        // POST: /Order/Pay
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Pay(Payment model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            // Save payment
+            model.PaymentDate = DateTime.UtcNow;
+            model.Status = PaymentStatus.Completed;
+            model.TransactionId = Guid.NewGuid().ToString();
+
+            _context.Payments.Add(model);
+
+            // Optional: update order status
+            var order = _context.Orders.FirstOrDefault(o => o.Id == model.OrderId);
+            if (order != null)
+            {
+                order.Status = OrderStatus.Processing;
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("OrderHistory");
+        }
     }
+
 }
+

@@ -215,5 +215,17 @@ namespace CodeTech_Task_1.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Custmber", "Admin");
         }
+
+
+        public async Task<IActionResult> ViewAllOrderHistory() 
+        { 
+            var order = await _context.Orders
+                .Include(x => x.OrderItems)
+                    .ThenInclude(x => x.Product)
+                .OrderByDescending(x => x.OrderDate)
+                .ToListAsync();
+
+            return View(order);
+        }
     }
 }
