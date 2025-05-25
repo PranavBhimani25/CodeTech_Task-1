@@ -4,11 +4,15 @@
     ViewData["Title"] = "Shop Product";
 }
 
-<div class="container mt-4 mb-4">
+<div class="container mt-4 mb-4 ">
     <div class="d-flex justify-content-between align-items-center">
         <h2 class="mb-0">All Products</h2>
         <a href="@Url.Action("Cart", "User")" class="btn btn-success">Go to Cart</a>
     </div>
+</div>
+<div class="alert alert-info alert-dismissible fade show">
+    <strong>Info : </strong> <span class=" ">You Can See Selectd Items In Go To Cart Button </span>
+    <button type="button" class="btn-close" data-dismiss="alert"></button>
 </div>
 
 <div class="row">
@@ -27,7 +31,8 @@
 
                     <form asp-action="AddToCart" method="post">
                         <input type="hidden" name="id" value="@item.ProductId" />
-                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        <button type="submit" class="btn btn-primary">Add to Cart</button> 
+                        
                     </form>
                 </div>
             </div>
@@ -35,3 +40,25 @@
     }
 </div>
 
+
+@* 
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Popup Title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Product is Added into Cart !
+            </div>
+            <div class="modal-footer">
+                <form asp-action="AddToCart" method="post">
+                    <input type="hidden" name="id" value="" />
+                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> *@

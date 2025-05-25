@@ -21,7 +21,7 @@ namespace CodeTech_Task_1.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Demo()
         {
             return View();
         }

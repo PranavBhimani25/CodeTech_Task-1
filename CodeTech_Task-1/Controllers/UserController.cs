@@ -3,6 +3,7 @@ using CodeTech_Task_1.Helpers;
 using CodeTech_Task_1.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodeTech_Task_1.Controllers
@@ -56,8 +57,9 @@ namespace CodeTech_Task_1.Controllers
 
         // Add to cart
         [HttpPost]
-        public IActionResult AddToCart(int id)
+        public async Task<IActionResult> AddToCart(int id)
         {
+            //await Task.Delay(4000);
             var product = _context.Products.Find(id);
             if (product == null)
                 return NotFound();
@@ -84,6 +86,7 @@ namespace CodeTech_Task_1.Controllers
             }
 
             HttpContext.Session.SetObjectAsJson(cartKey, cart);
+            
             return RedirectToAction("Shop");
         }
 
@@ -155,6 +158,8 @@ namespace CodeTech_Task_1.Controllers
                 return Unauthorized();
             }
 
+            
+
             var order = new Order
             {
                 CustomerId = customer.CustomerId,
@@ -173,18 +178,34 @@ namespace CodeTech_Task_1.Controllers
             _context.SaveChanges();
 
             HttpContext.Session.Remove(cartKey); // Clear cart
-
+            TempData["OderID"] = order.Id;
             return RedirectToAction("OrderSuccess");
         }
 
-        public IActionResult OrderSuccess()
+        public async Task<IActionResult> OrderSuccess()
         {
+            
             return View();
         }
 
         public IActionResult OrderHistory()
         {
-            return View();
+            var userId = HttpContext.Session.GetInt32("Cust_Id");
+
+            var customer = _context.Customers.FirstOrDefault(c => c.CustomerId == userId);
+            if (customer == null)
+            {
+                return RedirectToAction("LoginPage", "User");
+            }
+
+            var orders = _context.Orders
+                .Where(o => o.CustomerId == customer.CustomerId)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
+
+            return View(orders);
         }
 
     }
