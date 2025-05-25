@@ -16,6 +16,8 @@ namespace CodeTech_Task_1
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSession();
+            //builder.Services.AddControllersWithViews().AddNewtonsoftJson();
+
 
             var app = builder.Build();
 

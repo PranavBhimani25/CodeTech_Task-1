@@ -1,10 +1,11 @@
-using System.Diagnostics;
 using CodeTech_Task_1.Data;
 using CodeTech_Task_1.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace CodeTech_Task_1.Controllers
@@ -46,6 +47,7 @@ namespace CodeTech_Task_1.Controllers
                 {
                     if (model.Password == "admin@123")
                     {
+                        HttpContext.Session.SetString("UserSession", "active");
                         return RedirectToAction("AdminIndex", "Admin");
                     }
                     else {
@@ -60,6 +62,7 @@ namespace CodeTech_Task_1.Controllers
                 if (customer != null)
                 {
                     //Login is Successfull
+                    HttpContext.Session.SetString("UserSession", "active");
                     HttpContext.Session.SetInt32("Cust_Id", customer.CustomerId);
                     HttpContext.Session.SetString("Cust_Name", customer.Name);
                     return RedirectToAction("UserHomePage","User");
@@ -133,8 +136,13 @@ namespace CodeTech_Task_1.Controllers
 
         public IActionResult Logout()
         {
+            string cartKey = "Cart";
+            HttpContext.Session.Remove(cartKey);
+
+            HttpContext.Session.Remove("UserSession");
             HttpContext.Session.Remove("Cust_Name");
             HttpContext.Session.Remove("Cust_Id");
+
             return RedirectToAction("LoginPage","Home");
         }
 

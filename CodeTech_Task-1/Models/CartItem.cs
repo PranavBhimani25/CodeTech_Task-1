@@ -9,20 +9,29 @@ namespace CodeTech_Task_1.Models
         public int Id { get; set; }
 
         [Required]
-        public int CartId { get; set; }
-
-        [ForeignKey("CartId")]
-        public Cart Cart { get; set; }
-
-        [Required]
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
 
-        [ForeignKey("ProductId")]
-        public Product Product { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string Name { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
+        [Range(0.01, 100000)]
+        public decimal Price { get; set; }
+
+        [Required]
+        [Range(1, 100)]
         public int Quantity { get; set; }
+
+        [StringLength(300)]
+        public string ImageUrl { get; set; }
+
+        // Optional navigation property (only if Product entity exists)
+        public Product Product { get; set; }
+
+        [NotMapped]
+        public decimal TotalPrice => Price * Quantity;
     }
 
 }

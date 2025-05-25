@@ -1,8 +1,9 @@
-﻿@model Customer
-@{
+﻿@{
     Layout = "User_Layout";
     ViewData["Title"] = "Profile";
 }
+@model Customer
+
 
 <div class="container mt-5">
     <div class="card mx-auto shadow" style="max-width: 500px;">
@@ -13,7 +14,8 @@
             <img src="~/Images/male-face-icon-default-profile-image--c3f2c592f9.jpg" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;" />
             <h5 class="card-title">@Model.Name</h5>
             <p class="card-text">
-                <strong>Email:</strong> @Model.Email<br />
+                <strong>Email:</strong> 
+                @Model.Email
             </p>
         </div>
         <div class="card-footer text-center">

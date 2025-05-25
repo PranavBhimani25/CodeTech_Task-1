@@ -14,6 +14,7 @@ namespace CodeTech_Task_1.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItem { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,12 +6,14 @@ namespace CodeTech_Task_1.Models
     public class Cart
     {
         [Key]
-        public int CartId { get; set; }
+        public int Id { get; set; }
 
-        public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        public string UserId { get; set; } // Link to ApplicationUser
 
-        public ICollection<Product> Products { get; set; }
+        public List<CartItem> Items { get; set; }
+
+        [NotMapped]
+        public decimal TotalAmount => Items?.Sum(i => i.Price * i.Quantity) ?? 0;
     }
 
 

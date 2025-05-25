@@ -19,16 +19,31 @@ namespace CodeTech_Task_1.Controllers
 
         public IActionResult AdminIndex()
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             return View();
         }
 
         public IActionResult Profile()
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             return View();
         }
 
         public IActionResult Product()
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var allproduct = _context.Products.ToList();
             return View(allproduct);
         }
@@ -60,11 +75,21 @@ namespace CodeTech_Task_1.Controllers
 
         public IActionResult Semo()
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             return View();
         }
 
         public async Task<IActionResult> Edit(int id)
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
             return View(product); // This returns the edit view with product model
@@ -104,6 +129,11 @@ namespace CodeTech_Task_1.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
             return View(product); // This returns the edit view with product model
@@ -132,12 +162,22 @@ namespace CodeTech_Task_1.Controllers
 
         public IActionResult Custmber()
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var customberlist = _context.Customers.ToList();
             return View(customberlist);
         }
 
         public async Task<IActionResult> EditCust(int id)
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var Customer = await _context.Customers.FindAsync(id);
             if (Customer == null) return NotFound();
             return View(Customer); 
@@ -156,6 +196,11 @@ namespace CodeTech_Task_1.Controllers
 
         public async Task<IActionResult> DeleteCust(int id)
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var Customer = await _context.Customers.FindAsync(id);
             if (Customer == null) return NotFound();
             return View(Customer);
