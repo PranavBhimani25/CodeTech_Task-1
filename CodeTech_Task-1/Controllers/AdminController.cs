@@ -2,6 +2,7 @@
 using CodeTech_Task_1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace CodeTech_Task_1.Controllers
 {
@@ -227,5 +228,35 @@ namespace CodeTech_Task_1.Controllers
 
             return View(order);
         }
+
+
+        public async Task<IActionResult> _OrderStatus(int orderId, string status)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null) return NotFound();
+
+            switch (status.ToLower())
+            {
+                case "shipped":
+                    order.Status = OrderStatus.Shipped;
+                    TempData["OrderStatus"] = "Shipped";
+                    break;
+                case "cancelled":
+                    order.Status = OrderStatus.Cancelled;
+                    TempData["OrderStatus"] = "Cancelled";
+                    break;
+            }
+            await _context.SaveChangesAsync();
+
+            TempData["ShowModal"] = true;
+            TempData["OrderId"] = orderId;
+            return RedirectToAction("ViewAllOrderHistory");
+        }
+
+        public IActionResult OrderDetails()
+        {
+            return View();
+        }
+
     }
 }

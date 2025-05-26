@@ -29,20 +29,20 @@ namespace CodeTech_Task_1.Models
         public int OrderId { get; set; }
 
         [ForeignKey("OrderId")]
-        public Order Order { get; set; }
+        public Order? Order { get; set; }
 
         [Required]
-        [DataType(DataType.Currency)]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Amount must be greater than 0")]
         public decimal Amount { get; set; }
 
         [Required]
         public PaymentMethod Method { get; set; }
 
-        public string TransactionId { get; set; }
-
-        public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
+        public string? TransactionId { get; set; }
 
         public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
+
+        public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
     }
 
 

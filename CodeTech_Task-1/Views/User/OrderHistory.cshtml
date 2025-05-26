@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Order History";
     Layout = "User_Layout";
+    decimal amount = Convert.ToDecimal(TempData["Amount"]);
 }
 
 <h2>Order History</h2>
@@ -19,11 +20,15 @@ else
             <div class="card-header">
                 <strong>Order ID:</strong> @order.Id |
                 <strong>Date:</strong> @order.OrderDate.ToLocalTime().ToString("g") |
-                <strong>Status:</strong> <span class="text-danger">@order.Status </span>
+                <strong>Status:</strong> <span class="badge bg-info">@order.Status </span>
                 <div class="text-end float-end">
                     @if (order.Status == OrderStatus.Pending)
                     {
                         <a asp-controller="User" asp-action="Pay" asp-route-orderId="@order.Id" class="btn btn-primary btn-sm">Pay Now</a>
+                    }
+                    else if(order.Status == OrderStatus.Cancelled)
+                    {
+                        <a asp-controller="User" asp-action="Pay" asp-route-orderId="@order.Id" class="btn btn-primary btn-sm">Re Payment</a>
                     }
                 </div>
             </div>
@@ -46,8 +51,6 @@ else
                                 <td>@item.UnitPrice.ToString("C")</td>
                                 <td>@item.Quantity</td>
                                 <td>@(item.UnitPrice * item.Quantity)</td>
-                                
-
                             </tr>
                         }
                     </tbody>
@@ -58,4 +61,45 @@ else
             </div>
         </div>
     }
+}
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Payment is Successfully Done !</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success">
+
+                    @if (TempData["OrderId"] != null)
+                    {
+                        <div class="alert alert-success">
+                            Order ID: @TempData["OrderId"] <br />
+                            Transaction ID: @TempData["TransactionId"] <br />
+                            Amount: ₹@amount
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var showModal = '@TempData["ShowModal"]';
+            if (showModal === 'True') {
+                var myModal = new bootstrap.Modal(document.getElementById('myModal'));
+                myModal.show();
+            }
+        });
+    </script>
 }

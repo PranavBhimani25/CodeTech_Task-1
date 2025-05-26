@@ -235,29 +235,38 @@ namespace CodeTech_Task_1.Controllers
             return View(payment);
         }
 
-        // POST: /Order/Pay
+        // POST: /Payment/Pay
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Pay(Payment model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                var order = _context.Orders.FirstOrDefault(o => o.Id == model.OrderId);
+                ViewBag.Order = order;
+                return View(model);
+            }
 
-            // Save payment
+            model.TransactionId = Guid.NewGuid().ToString();
             model.PaymentDate = DateTime.UtcNow;
             model.Status = PaymentStatus.Completed;
-            model.TransactionId = Guid.NewGuid().ToString();
 
             _context.Payments.Add(model);
 
-            // Optional: update order status
-            var order = _context.Orders.FirstOrDefault(o => o.Id == model.OrderId);
-            if (order != null)
+            // Optionally update the order status
+            var orderToUpdate = _context.Orders.FirstOrDefault(o => o.Id == model.OrderId);
+            if (orderToUpdate != null)
             {
-                order.Status = OrderStatus.Processing;
+                orderToUpdate.Status = OrderStatus.Processing;
             }
 
+
             _context.SaveChanges();
-            return RedirectToAction("OrderHistory");
+            TempData["ShowModal"] = true;
+            TempData["OrderId"] = model.OrderId;
+            TempData["TransactionId"] = model.TransactionId;
+            TempData["Amount"] = model.Amount.ToString();
+            return RedirectToAction("OrderHistory", "User");
         }
     }
 

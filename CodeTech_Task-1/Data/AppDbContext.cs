@@ -1,4 +1,5 @@
-﻿using CodeTech_Task_1.Models;
+﻿using CodeTech_Task_1.Migrations;
+using CodeTech_Task_1.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CodeTech_Task_1.Data
