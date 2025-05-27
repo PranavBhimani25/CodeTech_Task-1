@@ -21,15 +21,15 @@ namespace CodeTech_Task_1.Controllers
             _logger = logger;
         }
 
-        public IActionResult Demo()
-        {
-            return View();
-        }
+        //public IActionResult Demo()
+        //{
+        //    return View();
+        //}
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        //public IActionResult Privacy()
+        //{
+        //    return View();
+        //}
 
         public IActionResult LoginPage()
         {

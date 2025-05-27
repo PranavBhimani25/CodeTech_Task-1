@@ -28,15 +28,15 @@ namespace CodeTech_Task_1.Controllers
             return View();
         }
 
-        public IActionResult Profile()
-        {
-            var sessionValue = HttpContext.Session.GetString("UserSession");
-            if (sessionValue != "active")
-            {
-                return RedirectToAction("LoginPage", "Home");
-            }
-            return View();
-        }
+        //public IActionResult Profile()
+        //{
+        //    var sessionValue = HttpContext.Session.GetString("UserSession");
+        //    if (sessionValue != "active")
+        //    {
+        //        return RedirectToAction("LoginPage", "Home");
+        //    }
+        //    return View();
+        //}
 
         public IActionResult Product()
         {
@@ -74,15 +74,15 @@ namespace CodeTech_Task_1.Controllers
             return Json(new { success = true });
         }
 
-        public IActionResult Semo()
-        {
-            var sessionValue = HttpContext.Session.GetString("UserSession");
-            if (sessionValue != "active")
-            {
-                return RedirectToAction("LoginPage", "Home");
-            }
-            return View();
-        }
+        //public IActionResult Semo()
+        //{
+        //    var sessionValue = HttpContext.Session.GetString("UserSession");
+        //    if (sessionValue != "active")
+        //    {
+        //        return RedirectToAction("LoginPage", "Home");
+        //    }
+        //    return View();
+        //}
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -219,7 +219,12 @@ namespace CodeTech_Task_1.Controllers
 
 
         public async Task<IActionResult> ViewAllOrderHistory() 
-        { 
+        {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             var order = await _context.Orders
                 .Include(x => x.OrderItems)
                     .ThenInclude(x => x.Product)
@@ -253,10 +258,10 @@ namespace CodeTech_Task_1.Controllers
             return RedirectToAction("ViewAllOrderHistory");
         }
 
-        public IActionResult OrderDetails()
-        {
-            return View();
-        }
+        //public IActionResult OrderDetails()
+        //{
+        //    return View();
+        //}
 
     }
 }

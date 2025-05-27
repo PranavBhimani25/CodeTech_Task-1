@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace CodeTech_Task_1.Controllers
 {
@@ -184,7 +185,11 @@ namespace CodeTech_Task_1.Controllers
 
         public IActionResult OrderSuccess()
         {
-            
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
             return View();
         }
 
@@ -216,6 +221,12 @@ namespace CodeTech_Task_1.Controllers
         // GET: /Order/Pay/{orderId}
         public IActionResult Pay(int orderId)
         {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
+
             var userId = HttpContext.Session.GetInt32("Cust_Id");
             var customer = _context.Customers.FirstOrDefault(c => c.CustomerId == userId);
             if (customer == null) return Unauthorized();
@@ -267,6 +278,40 @@ namespace CodeTech_Task_1.Controllers
             TempData["TransactionId"] = model.TransactionId;
             TempData["Amount"] = model.Amount.ToString();
             return RedirectToAction("OrderHistory", "User");
+        }
+
+        public async  Task<IActionResult> MyShippedOrders()
+        {
+            var sessionValue = HttpContext.Session.GetString("UserSession");
+            if (sessionValue != "active")
+            {
+                return RedirectToAction("LoginPage", "Home");
+            }
+
+            var userId = HttpContext.Session.GetInt32("Cust_Id"); 
+
+            var orders = await _context.Orders
+                .Where(o => o.Customer.CustomerId == userId && o.Status == OrderStatus.Shipped)
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            return View(orders);
+            
+        }
+
+
+        public async Task<IActionResult> ProductDelivered(int orderid)
+        {
+            var order = await _context.Orders.FindAsync(orderid);
+            if (order != null) { NotFound(); }
+
+            order.Status = OrderStatus.Delivered;
+
+            _context.SaveChanges();
+            TempData["ShowModal"] = true;
+            return RedirectToAction("MyShippedOrders");
         }
     }
 

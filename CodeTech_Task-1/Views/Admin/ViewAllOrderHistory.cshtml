@@ -27,10 +27,11 @@
                     </form>
                 }
                 else if(order.Status == OrderStatus.Delivered){
-                    <form asp-action="OrderDetails" method="post" style="display:inline;">
+                    @* <form asp-action="OrderDetails" method="post" style="display:inline;">
                         <input type="hidden" name="orderId" value="@order.Id" />
                         <button type="submit" class="btn btn-success btn-sm">Details</button>
-                    </form>
+                    </form> *@
+                    <span class="badge bg-success">Order is @order.Status</span>
                 }
 
                 else
